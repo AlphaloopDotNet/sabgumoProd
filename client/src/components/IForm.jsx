@@ -35,34 +35,65 @@ const IForm = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/send-email`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: false, // Important for CORS
-        }
-      );
+      // Create formatted message for WhatsApp
+      const message = `
+  New Travel Inquiry:
+  👤 Name: ${formData.name}
+  📧 Email: ${formData.email}
+  📱 Phone: ${formData.phone}
+  🌍 Destination: ${formData.destination}
+  👥 Number of Guests: ${formData.guests}
+  📅 Travel Date: ${formData.travelDates}
+  💬 Message: ${formData.message}
+      `.trim();
 
-      if (response.status === 200) {
-        setShowPopup(true);
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          destination: "",
-          guests: "",
-          travelDates: "",
-          message: "",
-        });
+      // Create WhatsApp link with formatted message
+      const whatsappLink = `https://wa.me/918239498447?text=${encodeURIComponent(
+        message
+      )}`;
 
-        setTimeout(() => {
-          setShowPopup(false);
-          navigate("/");
-        }, 2000);
-      }
+         // const response = await axios.post(
+      //   `${API_BASE_URL}/send-email`,
+      //   formData,
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     withCredentials: false, // Important for CORS
+      //   }
+      // );
+
+      // if (response.status === 200) {
+      //   setShowPopup(true);
+      //   setFormData({
+      //     name: "",
+      //     email: "",
+      //     phone: "",
+      //     destination: "",
+      //     guests: "",
+      //     travelDates: "",
+      //     message: "",
+      //   });
+
+      //   setTimeout(() => {
+      //     setShowPopup(false);
+      //     navigate("/");
+      //   }, 2000);
+      // }
+      
+      // Open WhatsApp in new tab
+      window.open(whatsappLink, "_blank");
+
+      // Optional: Reset form after successful submission
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        destination: "",
+        guests: "",
+        travelDates: "",
+        message: "",
+      });
     } catch (error) {
       console.error("Error details:", error.response || error);
       alert("Failed to send inquiry. Please try again later.");
