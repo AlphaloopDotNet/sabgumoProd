@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Calendar, Send, User, Mail, Phone, MapPin, Users, MessageSquare } from 'lucide-react';
 import { IoLogoWhatsapp } from "react-icons/io5";
-import { useNavigate } from 'react-router-dom'; // Import for navigation
+import { useNavigate } from 'react-router-dom'; 
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -23,35 +23,33 @@ const IForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Show loading popup
-
+    setLoading(true);
+  
     try {
-      // Send form data to the backend
-      const response = await axios.post(`${API_BASE_URL}/send-email`, formData);
-
-      setLoading(false); // Hide loading popup
-      setShowPopup(true); // Show success popup
-
-      // Reset form data
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        destination: '',
-        guests: '',
-        travelDates: '',
-        message: '',
+      const response = await axios.post(`${API_BASE_URL}/send-email`, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: false // Important for CORS
       });
-
-      // Close popup and redirect after 2 seconds
-      setTimeout(() => {
-        setShowPopup(false);
-        navigate('/'); // Redirect to /home
-      }, 2000);
+  
+      if (response.status === 200) {
+        setShowPopup(true);
+        setFormData({
+          name: '', email: '', phone: '', destination: '',
+          guests: '', travelDates: '', message: ''
+        });
+  
+        setTimeout(() => {
+          setShowPopup(false);
+          navigate('/');
+        }, 2000);
+      }
     } catch (error) {
-      setLoading(false); // Hide loading popup
-      console.error('Error sending email:', error);
+      console.error('Error details:', error.response || error);
       alert('Failed to send inquiry. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   };
 
