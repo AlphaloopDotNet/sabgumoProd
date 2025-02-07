@@ -1,20 +1,29 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { Calendar, Send, User, Mail, Phone, MapPin, Users, MessageSquare } from 'lucide-react';
+import React, { useState } from "react";
+import axios from "axios";
+import {
+  Calendar,
+  Send,
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Users,
+  MessageSquare,
+} from "lucide-react";
 import { IoLogoWhatsapp } from "react-icons/io5";
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from "react-router-dom"; // Import for navigation
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const IForm = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    destination: '',
-    guests: '',
-    travelDates: '',
-    message: '',
+    name: "",
+    email: "",
+    phone: "",
+    destination: "",
+    guests: "",
+    travelDates: "",
+    message: "",
   });
 
   const [showPopup, setShowPopup] = useState(false); // Popup state
@@ -24,30 +33,39 @@ const IForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     try {
-      const response = await axios.post(`${API_BASE_URL}/send-email`, formData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        withCredentials: false // Important for CORS
-      });
-  
+      const response = await axios.post(
+        `${API_BASE_URL}/send-email`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: false, // Important for CORS
+        }
+      );
+
       if (response.status === 200) {
         setShowPopup(true);
         setFormData({
-          name: '', email: '', phone: '', destination: '',
-          guests: '', travelDates: '', message: ''
+          name: "",
+          email: "",
+          phone: "",
+          destination: "",
+          guests: "",
+          travelDates: "",
+          message: "",
         });
-  
+
         setTimeout(() => {
           setShowPopup(false);
-          navigate('/');
+          navigate("/");
         }, 2000);
       }
     } catch (error) {
-      console.error('Error details:', error.response || error);
-      alert('Failed to send inquiry. Please try again later.');
+      console.error("Error details:", error.response || error);
+      alert("Failed to send inquiry. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -62,17 +80,22 @@ const IForm = () => {
 
   const handleWhatsAppChat = () => {
     const message = `Hi, I’d like to inquire about a trip. `;
-    const whatsappLink = `https://wa.me/8239498447?text=${encodeURIComponent(message)}`;
-    window.open(whatsappLink, '_blank');
+    const whatsappLink = `https://wa.me/8239498447?text=${encodeURIComponent(
+      message
+    )}`;
+    window.open(whatsappLink, "_blank");
   };
 
   return (
     <div className="min-h-screen bg-[#ffeed8] py-12 pt-24 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-black sm:text-4xl mb-4">Start Your Journey</h2>
+          <h2 className="text-3xl font-bold text-black sm:text-4xl mb-4">
+            Start Your Journey
+          </h2>
           <p className="text-lg text-gray-700">
-            Fill out the form below or chat with us on WhatsApp to plan your dream trip!
+            Fill out the form below or chat with us on WhatsApp to plan your
+            dream trip!
           </p>
         </div>
 
@@ -226,8 +249,12 @@ const IForm = () => {
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg p-6 text-center shadow-xl">
-            <h2 className="text-xl font-bold text-gray-700 mb-4">Sending Inquiry...</h2>
-            <p className="text-gray-500">Please wait while we process your request.</p>
+            <h2 className="text-xl font-bold text-gray-700 mb-4">
+              Sending Inquiry...
+            </h2>
+            <p className="text-gray-500">
+              Please wait while we process your request.
+            </p>
           </div>
         </div>
       )}
@@ -236,8 +263,12 @@ const IForm = () => {
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg p-6 text-center shadow-xl">
-            <h2 className="text-xl font-bold text-green-600 mb-4">Inquiry Sent Successfully!</h2>
-            <p className="text-gray-700">Thank you for reaching out. Redirecting you to the home page...</p>
+            <h2 className="text-xl font-bold text-green-600 mb-4">
+              Inquiry Sent Successfully!
+            </h2>
+            <p className="text-gray-700">
+              Thank you for reaching out. Redirecting you to the home page...
+            </p>
           </div>
         </div>
       )}
